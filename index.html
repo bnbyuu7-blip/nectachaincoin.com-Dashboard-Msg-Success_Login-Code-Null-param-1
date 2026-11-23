@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#080a0e">
+<title>Main Wallet — Demo</title>
+
+<style>
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
+}
+
+body{
+ font-family:Arial,Helvetica,sans-serif;
+ background:#050608;
+ color:#fff;
+ min-height:100vh;
+}
+
+.app{
+ max-width:480px;
+ margin:auto;
+ padding:20px 16px 30px;
+ background:#080a0e;
+ min-height:100vh;
+}
+
+/* HEADER */
+
+.header{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ margin-bottom:28px;
+}
+
+.profile{
+ display:flex;
+ align-items:center;
+ gap:12px;
+}
+
+.avatar{
+ width:56px;
+ height:56px;
+ border-radius:50%;
+ background:linear-gradient(145deg,#66758d,#303c50);
+ border:2px solid #242e40;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:27px;
+}
+
+.wallet-title{
+ font-size:23px;
+ font-weight:700;
+}
+
+.wallet-id{
+ font-size:14px;
+ color:#a3a8b3;
+ margin-top:5px;
+}
+
+.header-icons{
+ display:flex;
+ gap:9px;
+}
+
+.icon-btn{
+ width:48px;
+ height:48px;
+ background:#0d0f13;
+ border:1px solid #24262c;
+ border-radius:17px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ color:#dce2eb;
+ font-size:21px;
+}
+
+/* TABS */
+
+.tabs{
+ display:flex;
+ align-items:center;
+ width:220px;
+ padding:5px;
+ background:#101114;
+ border:1px solid #28292e;
+ border-radius:45px;
+ margin-bottom:25px;
+}
+
+.tab{
+ flex:1;
+ padding:15px 10px;
+ text-align:center;
+ border-radius:40px;
+ color:#9da2ad;
+ font-weight:700;
+ font-size:15px;
+}
+
+.tab.active{
+ background:linear-gradient(145deg,#527bb5,#385783);
+ color:#fff;
+}
+
+/* BALANCE DASHBOARD */
+
+.balance-card{
+ position:relative;
+ overflow:hidden;
+ padding:27px 22px 28px;
+ border-radius:29px;
+ border:1px solid #303744;
+ background:
+ radial-gradient(
+  circle at 100% 0%,
+  rgba(65,91,133,.36),
+  transparent 45%
+ ),
+ linear-gradient(145deg,#191d26,#0c0e13 75%);
+ box-shadow:0 0 0 1px rgba(255,255,255,.025);
+ margin-bottom:20px;
+}
+
+.balance-card:before{
+ content:"";
+ position:absolute;
+ width:430px;
+ height:430px;
+ border-radius:50%;
+ border:1px solid rgba(110,132,170,.09);
+ right:-230px;
+ top:95px;
+ pointer-events:none;
+}
+
+.balance-card:after{
+ content:"";
+ position:absolute;
+ width:340px;
+ height:340px;
+ border-radius:50%;
+ border:1px solid rgba(110,132,170,.07);
+ right:-160px;
+ top:160px;
+ pointer-events:none;
+}
+
+.balance-top{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ position:relative;
+ z-index:2;
+}
+
+.balance-label{
+ font-size:17px;
+ color:#b4bbc8;
+ display:flex;
+ align-items:center;
+ gap:10px;
+}
+
+.eye-btn{
+ width:40px;
+ height:40px;
+ border-radius:14px;
+ border:0;
+ background:#242830;
+ color:#c1c8d2;
+ font-size:19px;
+ cursor:pointer;
+}
+
+.demo-pill{
+ border:1px solid rgba(52,190,151,.3);
+ background:rgba(24,100,81,.15);
+ color:#72d4b5;
+ border-radius:35px;
+ padding:12px 16px;
+ font-size:13px;
+ font-weight:700;
+ display:flex;
+ align-items:center;
+ gap:8px;
+}
+
+.demo-dot{
+ width:9px;
+ height:9px;
+ background:#43c49a;
+ border-radius:50%;
+}
+
+.balance-amount{
+ font-size:clamp(34px,9vw,52px);
+ font-weight:800;
+ letter-spacing:-2px;
+ margin-top:24px;
+ white-space:nowrap;
+ position:relative;
+ z-index:2;
+}
+
+.balance-change{
+ display:flex;
+ align-items:center;
+ flex-wrap:wrap;
+ gap:8px;
+ margin-top:18px;
+ font-size:18px;
+ position:relative;
+ z-index:2;
+}
+
+.positive{
+ color:#46bd96;
+ font-weight:600;
+}
+
+.today{
+ color:#a8b0bd;
+}
+
+/* ALLOCATION */
+
+.allocation{
+ margin-top:44px;
+ position:relative;
+ z-index:2;
+}
+
+.allocation-bar{
+ display:flex;
+ height:13px;
+ gap:5px;
+ width:100%;
+}
+
+.segment{
+ border-radius:20px;
+ height:13px;
+}
+
+.btc{
+ width:10%;
+ background:#eda73c;
+}
+
+.trc{
+ width:10%;
+ background:#3db38d;
+}
+
+.erc{
+ width:10%;
+ background:#39b68d;
+}
+
+.other{
+ width:70%;
+ background:#c8d7eb;
+}
+
+.allocation-legend{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:14px 10px;
+ margin-top:23px;
+}
+
+.legend-item{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ font-size:13px;
+ color:#adb6c4;
+ min-width:0;
+}
+
+.legend-dot{
+ width:11px;
+ height:11px;
+ min-width:11px;
+ border-radius:50%;
+}
+
+.legend-item strong{
+ color:#f1f3f7;
+ margin-left:2px;
+}
+
+/* SECTION CARDS */
+
+.card{
+ background:#11151c;
+ border:1px solid #272e39;
+ border-radius:20px;
+ padding:20px;
+ margin-bottom:17px;
+}
+
+.card-title{
+ font-size:17px;
+ font-weight:700;
+ margin-bottom:18px;
+}
+
+.token-row{
+ display:flex;
+ align-items:center;
+ gap:13px;
+}
+
+.token-logo{
+ width:45px;
+ height:45px;
+ border-radius:50%;
+ background:#26a17b;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:22px;
+ font-weight:bold;
+}
+
+.token-name{
+ font-size:15px;
+ font-weight:700;
+}
+
+.token-network{
+ color:#8794a6;
+ font-size:12px;
+ margin-top:5px;
+}
+
+/* DEMO FORM */
+
+.label{
+ display:block;
+ font-size:13px;
+ color:#9ba8b9;
+ margin-bottom:8px;
+}
+
+.input-group{
+ margin-bottom:16px;
+}
+
+input{
+ width:100%;
+ height:51px;
+ border-radius:12px;
+ background:#090e15;
+ border:1px solid #293647;
+ padding:0 13px;
+ color:white;
+ font-size:15px;
+ outline:none;
+}
+
+input:focus{
+ border-color:#4b79b4;
+}
+
+.max-btn{
+ float:right;
+ margin-top:-42px;
+ margin-right:7px;
+ position:relative;
+ border:0;
+ border-radius:8px;
+ background:#18352e;
+ color:#43c79a;
+ padding:9px 12px;
+ font-weight:700;
+ cursor:pointer;
+}
+
+.main-btn{
+ width:100%;
+ height:52px;
+ border:0;
+ border-radius:13px;
+ background:linear-gradient(135deg,#507db9,#38618e);
+ color:#fff;
+ font-weight:700;
+ font-size:15px;
+ cursor:pointer;
+}
+
+.main-btn:active{
+ transform:scale(.99);
+}
+
+/* ACTIVITY */
+
+.activity{
+ border-bottom:1px solid #242d38;
+ padding:14px 0;
+}
+
+.activity:last-child{
+ border-bottom:0;
+}
+
+.activity-top{
+ display:flex;
+ justify-content:space-between;
+ gap:8px;
+ font-size:13px;
+}
+
+.activity-status{
+ color:#e4b86d;
+}
+
+.activity-bottom{
+ color:#78889c;
+ font-size:12px;
+ margin-top:7px;
+ line-height:1.6;
+}
+
+.demo-notice{
+ margin-top:16px;
+ padding:12px;
+ border-radius:11px;
+ background:#171b23;
+ border:1px solid #2b3441;
+ color:#8f9bac;
+ font-size:11px;
+ line-height:1.6;
+ text-align:center;
+}
+
+.footer{
+ text-align:center;
+ font-size:11px;
+ color:#657387;
+ padding:18px 5px;
+}
+
+/* MODAL */
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.75);
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:18px;
+ z-index:99;
+}
+
+.modal.show{
+ display:flex;
+}
+
+.modal-box{
+ width:100%;
+ max-width:400px;
+ background:#151922;
+ border:1px solid #303946;
+ border-radius:22px;
+ padding:24px;
+}
+
+.modal-title{
+ font-size:19px;
+ font-weight:700;
+ margin-bottom:15px;
+}
+
+.modal-message{
+ font-size:14px;
+ color:#a8b4c3;
+ line-height:1.7;
+}
+
+.modal-detail{
+ padding:13px 0;
+ border-bottom:1px solid #28313d;
+ display:flex;
+ justify-content:space-between;
+ gap:12px;
+ font-size:13px;
+}
+
+.modal-detail span:first-child{
+ color:#8c9aac;
+}
+
+.modal-detail span:last-child{
+ text-align:right;
+ word-break:break-word;
+}
+
+.close-btn{
+ width:100%;
+ margin-top:18px;
+ height:47px;
+ background:#3c679b;
+ color:white;
+ border:0;
+ border-radius:12px;
+ font-weight:700;
+ cursor:pointer;
+}
+
+@media(max-width:360px){
+ .balance-card{
+  padding:23px 16px;
+ }
+
+ .balance-amount{
+  font-size:34px;
+ }
+
+ .allocation-legend{
+  grid-template-columns:1fr;
+ }
+
+ .wallet-title{
+  font-size:20px;
+ }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- HEADER -->
+
+<div class="header">
+
+ <div class="profile">
+
+  <div class="avatar">👨🏽</div>
+
+  <div>
+   <div class="wallet-title">
+    Main Wallet ▾
+   </div>
+
+   <div class="wallet-id">
+    @Ethosglobal · 31141513
+   </div>
+  </div>
+
+ </div>
+
+ <div class="header-icons">
+  <div class="icon-btn">♧</div>
+  <div class="icon-btn">◇</div>
+ </div>
+
+</div>
+
+<!-- TABS -->
+
+<div class="tabs">
+
+ <div class="tab active">Wallet</div>
+ <div class="tab">Exchange</div>
+
+</div>
+
+<!-- BALANCE DASHBOARD -->
+
+<div class="balance-card">
+
+ <div class="balance-top">
+
+  <div class="balance-label">
+   Total balance
+
+   <button class="eye-btn" id="toggleBalance">
+    ◉
+   </button>
+  </div>
+
+  <div class="demo-pill">
+   <span class="demo-dot"></span>
+   Demo
+  </div>
+
+ </div>
+
+ <div class="balance-amount" id="balanceAmount">
+  $21,000,000
+ </div>
+
+ <div class="balance-change">
+
+  <span class="positive">
+   ▲ +0.00% / +$0
+  </span>
+
+  <span class="today">Today</span>
+
+ </div>
+
+ <!-- ALLOCATION BAR -->
+
+ <div class="allocation">
+
+  <div class="allocation-bar">
+
+   <div class="segment btc"></div>
+   <div class="segment trc"></div>
+   <div class="segment erc"></div>
+   <div class="segment other"></div>
+
+  </div>
+
+  <div class="allocation-legend">
+
+   <div class="legend-item">
+    <span class="legend-dot" style="background:#eda73c"></span>
+    BTC <strong>10%</strong>
+   </div>
+
+   <div class="legend-item">
+    <span class="legend-dot" style="background:#3db38d"></span>
+    USDT (TRC20) <strong>10%</strong>
+   </div>
+
+   <div class="legend-item">
+    <span class="legend-dot" style="background:#39b68d"></span>
+    USDT (ERC20) <strong>10%</strong>
+   </div>
+
+   <div class="legend-item">
+    <span class="legend-dot" style="background:#c8d7eb"></span>
+    Other <strong>70%</strong>
+   </div>
+
+  </div>
+
+ </div>
+
+</div>
+
+<!-- TOKEN CARD -->
+
+<div class="card">
+
+ <div class="token-row">
+
+  <div class="token-logo">₮</div>
+
+  <div>
+   <div class="token-name">Tether USD</div>
+   <div class="token-network">
+    USDT · TRC20 · Tron Network
+   </div>
+  </div>
+
+ </div>
+
+</div>
+
+<!-- DEMO INTERACTION -->
+
+<div class="card">
+
+ <div class="card-title">
+  Demo transaction
+ </div>
+
+ <label class="label">
+  Amount
+ </label>
+
+ <div class="input-group">
+
+  <input
+   id="amount"
+   type="number"
+   min="0"
+   placeholder="0.00"
+  >
+
+  <button class="max-btn" id="maxBtn">
+   MAX
+  </button>
+
+ </div>
+
+ <label class="label">
+  Recipient address
+ </label>
+
+ <div class="input-group">
+
+  <input
+   id="address"
+   type="text"
+   placeholder="Demo recipient address"
+   autocomplete="off"
+  >
+
+ </div>
+
+ <button class="main-btn" id="demoBtn">
+  Simulate Demo Request
+ </button>
+
+ <div class="demo-notice">
+  Demo only. This page does not connect to a blockchain,
+  transfer funds, approve tokens, or verify payments.
+ </div>
+
+</div>
+
+<!-- ACTIVITY -->
+
+<div class="card">
+
+ <div class="card-title">
+  Recent Activity
+ </div>
+
+ <div id="activityList">
+
+  <div class="activity">
+
+   <div class="activity-top">
+    <span>Demo wallet display</span>
+    <span class="activity-status">Simulation</span>
+   </div>
+
+   <div class="activity-bottom">
+    USDT · TRC20 · Demo interface
+   </div>
+
+  </div>
+
+ </div>
+
+</div>
+
+<div class="footer">
+ Wallet interface preview · Demo only
+</div>
+
+</div>
+
+<!-- DEMO MODAL -->
+
+<div class="modal" id="modal">
+
+ <div class="modal-box">
+
+  <div class="modal-title">
+   Demo Request
+  </div>
+
+  <div class="modal-message">
+   This is a local interface simulation.
+   No transaction has been broadcast and no funds
+   have been transferred.
+  </div>
+
+  <div class="modal-detail">
+   <span>Demo amount</span>
+   <span id="modalAmount">—</span>
+  </div>
+
+  <div class="modal-detail">
+   <span>Recipient</span>
+   <span id="modalAddress">—</span>
+  </div>
+
+  <div class="modal-detail">
+   <span>Status</span>
+   <span style="color:#e4b86d">Simulation only</span>
+  </div>
+
+  <button class="close-btn" id="closeModal">
+   Close
+  </button>
+
+ </div>
+
+</div>
+
+<script>
+
+/* BALANCE VISIBILITY */
+
+const balanceAmount =
+ document.getElementById("balanceAmount");
+
+const toggleBalance =
+ document.getElementById("toggleBalance");
+
+let balanceVisible = true;
+
+toggleBalance.addEventListener("click",function(){
+
+ balanceVisible = !balanceVisible;
+
+ balanceAmount.textContent = balanceVisible
+  ? "$21,000,000"
+  : "••••••••••";
+
+ toggleBalance.textContent =
+  balanceVisible ? "◉" : "○";
+
+});
+
+/* MAX */
+
+document.getElementById("maxBtn")
+.addEventListener("click",function(){
+
+ document.getElementById("amount").value =
+  "21000000";
+
+});
+
+/* DEMO MODAL */
+
+const modal =
+ document.getElementById("modal");
+
+document.getElementById("demoBtn")
+.addEventListener("click",function(){
+
+ const amount =
+  parseFloat(document.getElementById("amount").value);
+
+ const address =
+  document.getElementById("address").value.trim();
+
+ if(!amount || amount <= 0){
+
+  alert("Enter a demo amount first.");
+  return;
+
+ }
+
+ if(!address){
+
+  alert("Enter a demo recipient.");
+  return;
+
+ }
+
+ document.getElementById("modalAmount")
+  .textContent = amount.toLocaleString("en-US",{
+   minimumFractionDigits:2,
+   maximumFractionDigits:2
+  })+" USDT";
+
+ document.getElementById("modalAddress")
+  .textContent = address;
+
+ modal.classList.add("show");
+
+});
+
+/* CLOSE */
+
+document.getElementById("closeModal")
+.addEventListener("click",function(){
+
+ modal.classList.remove("show");
+
+});
+
+modal.addEventListener("click",function(e){
+
+ if(e.target === modal){
+  modal.classList.remove("show");
+ }
+
+});
+
+</script>
+
+</body>
+</html>
